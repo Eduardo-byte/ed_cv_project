@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { API_GATEWAY_JWT } from './endpoints';
 
+// For CV Projects API (not your work API Gateway)
 const apiGatewayAxiosInstance = axios.create({
     headers: {
-        'Authorization': `Bearer ${API_GATEWAY_JWT}`,
         'accept': 'application/json'
     },
 });

@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 dotenv.config();
 
@@ -72,6 +73,17 @@ app.post('/api/contact', async (req, res) => {
     });
   }
 });
+
+// Proxy projects API requests to internal API server
+if (process.env.NODE_ENV === 'production') {
+  app.use('/api/projects', createProxyMiddleware({
+    target: 'http://localhost:3002',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api/projects': '/api'
+    }
+  }));
+}
 
 app.get('/api/health', (req, res) => {
   res.json({ 

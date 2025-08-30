@@ -5,7 +5,10 @@ import apiGatewayAxiosInstance, { logError } from '../config/apiGatewayAxiosInst
 
 class APIProjectService {
     constructor() {
-        this.baseURL = 'http://localhost:3002/api';
+        // Production: use same domain with /api/projects, Dev: localhost:3002
+        this.baseURL = import.meta.env.PROD 
+            ? '/api/projects'  // Same domain in production 
+            : 'http://localhost:3002/api';  // Separate port in development
         this.serviceName = 'APIProjectService';
         
         // Configure axios instance for projects API
