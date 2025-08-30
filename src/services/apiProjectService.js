@@ -9,7 +9,7 @@ class APIProjectService {
         // Production: Use /api (gets proxied to internal server)
         // Development: Direct connection to localhost:3002
         this.baseURL = import.meta.env.PROD 
-            ? 'https://ed-cv-project.onrender.com/api'  // Proxied through main server to internal API
+                ? '/api'  // Relative URL - gets proxied to internal API server
             : 'http://localhost:3002/api';  // Direct connection in development
         this.serviceName = 'APIProjectService';
         
