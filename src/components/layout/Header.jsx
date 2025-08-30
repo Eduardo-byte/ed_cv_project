@@ -1,6 +1,6 @@
 // Header Component - Navigation header for the application
 import { useState, useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Navbar, 
   NavbarBrand, 
@@ -19,8 +19,10 @@ import { downloadGeneratedCV } from '../../utils/cvGenerator.js';
 
 // Simple scroll utility
 const scrollToElement = (elementId, offset = 0) => {
+  console.log('Attempting to scroll to:', elementId); // Debug log
   const element = document.getElementById(elementId);
   if (element) {
+    console.log('Element found:', element); // Debug log
     const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
     const offsetPosition = elementPosition - offset;
     
@@ -28,6 +30,8 @@ const scrollToElement = (elementId, offset = 0) => {
       top: offsetPosition,
       behavior: 'smooth'
     });
+  } else {
+    console.log('Element not found:', elementId); // Debug log
   }
 };
 
@@ -35,6 +39,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Navigation items
   const navItems = [
@@ -56,11 +61,33 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handle hash-based navigation after page load
+  useEffect(() => {
+    console.log('useEffect triggered. pathname:', location.pathname, 'hash:', location.hash); // Debug log
+    if (location.pathname === '/' && location.hash) {
+      const targetId = location.hash.slice(1); // Remove the #
+      console.log('Hash detected, scrolling to:', targetId);
+      const timer = setTimeout(() => {
+        scrollToElement(targetId, 80);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, location.hash]);
+
   // Handle navigation click
   const handleNavClick = (item) => {
-    if (item.isAnchor && location.pathname === ROUTES.HOME) {
-      // Scroll to section on home page
-      scrollToElement(item.id, 80);
+    console.log('Navigation clicked:', item); // Debug log
+    
+    if (item.isAnchor) {
+      if (location.pathname === ROUTES.HOME) {
+        // We're on home page, just scroll to section
+        console.log('On home page, scrolling directly to:', item.id);
+        scrollToElement(item.id, 80);
+      } else {
+        // We're on another page, navigate to home with hash
+        console.log('Not on home page, navigating to home with hash:', item.id);
+        navigate(`/#${item.id}`);
+      }
     }
     setIsMenuOpen(false);
   };
@@ -90,7 +117,13 @@ const Header = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="cursor-pointer"
-            onClick={() => handleNavClick({ id: 'home', isAnchor: true })}
+            onClick={() => {
+              if (location.pathname !== ROUTES.HOME) {
+                navigate('/');
+              } else {
+                scrollToElement('hero', 80);
+              }
+            }}
           >
             <p className="font-bold text-xl text-slate-800 dark:text-white">
               {APP_INFO.NAME.split(' ')[0]} {APP_INFO.NAME.split(' ')[1]}
