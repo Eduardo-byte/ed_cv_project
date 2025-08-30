@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import { createClient } from '@supabase/supabase-js';
 
 // Load environment variables (email credentials, etc.)
 dotenv.config();
@@ -82,7 +83,7 @@ app.post('/api/contact', async (req, res) => {
 if (process.env.NODE_ENV === 'production') {
   app.use('/api/projects', createProxyMiddleware({
     //target: 'http://localhost:3002', // Internal API server (same Render instance)
-    target: 'https://ed-cv-project.onrender.com', // Internal API server (same Render instance)
+    target: 'https://ed-cv-project.onrender.com:3001', // Internal API server (same Render instance)
     changeOrigin: true,
     pathRewrite: {
       '^/api/projects': '/api' // Remove /projects from path before forwarding
