@@ -1,4 +1,3 @@
-// CV server with Nodemailer
 import express from 'express';
 import nodemailer from 'nodemailer';
 import cors from 'cors';
@@ -7,15 +6,19 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
+// Load environment variables (email credentials, etc.)
 dotenv.config();
 
+// ES module compatibility for __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001; // Main server port (frontend + contact API)
 
+// Enable CORS for all origins (frontend can call API)
 app.use(cors());
+// Parse JSON request bodies from contact form
 app.use(express.json());
 
 // Serve React static files in production
@@ -74,13 +77,14 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Proxy projects API requests to internal API server
+// In production, proxy /api/projects/* requests to internal API server (port 3002)
+// This allows frontend to call same domain for both contact form and projects data
 if (process.env.NODE_ENV === 'production') {
   app.use('/api/projects', createProxyMiddleware({
-    target: 'http://localhost:3002',
+    target: 'http://localhost:3002', // Internal API server
     changeOrigin: true,
     pathRewrite: {
-      '^/api/projects': '/api'
+      '^/api/projects': '/api' // Remove /projects from path before forwarding
     }
   }));
 }
