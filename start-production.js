@@ -8,8 +8,8 @@ const __dirname = path.dirname(__filename);
 
 console.log('🚀 Starting production servers...');
 
-// Start API server
-const apiServer = spawn('node', ['server.js'], {
+// Start API server using the simple version (no path-to-regexp issues)
+const apiServer = spawn('node', ['server-simple.js'], {
   cwd: path.join(__dirname, 'api'),
   stdio: 'inherit',
   env: { ...process.env, PORT: '3002' }
