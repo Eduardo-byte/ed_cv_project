@@ -5,8 +5,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node server-simple.js",
+    "start-old": "node server.js",
+    "dev": "nodemon server-simple.js",
     "test": "jest"
   },
   "keywords": ["microservice", "api", "supabase", "projects", "cv"],
