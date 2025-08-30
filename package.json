@@ -11,7 +11,7 @@
     "api": "cd api && npm start",
     "dev:full": "concurrently \"npm run server\" \"npm run dev\" \"npm run api\"",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\" \"npm run api\"",
-    "start": "node start-production.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
