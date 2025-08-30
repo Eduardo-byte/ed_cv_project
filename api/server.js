@@ -189,68 +189,8 @@ app.get('/api/projects', async (req, res) => {
   }
 });
 
-// Get project by ID
-app.get('/api/projects/:id', async (req, res) => {
-  try {
-    const startTime = Date.now();
-    const { id } = req.params;
-
-    // Validate UUID format
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(id)) {
-      logger.warn('Invalid UUID format', { id });
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid project ID format'
-      });
-    }
-
-    const { data, error: dbError } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (dbError) {
-      if (dbError.code === 'PGRST116') {
-        logger.info('Project not found', { id });
-        return res.status(404).json({
-          success: false,
-          error: 'Project not found',
-          message: `No project found with ID: ${id}`
-        });
-      }
-      
-      logger.error('Database query failed for single project', { error: dbError, id });
-      return res.status(500).json({
-        success: false,
-        error: 'Database query failed'
-      });
-    }
-
-    const executionTime = Date.now() - startTime;
-
-    const response = {
-      success: true,
-      data: data,
-      metadata: {
-        executionTime: `${executionTime}ms`,
-        projectId: id
-      },
-      timestamp: new Date().toISOString()
-    };
-
-    logger.info('Single project fetched successfully', { id, executionTime });
-    res.json(response);
-
-  } catch (error) {
-    logger.error('Unexpected error in /api/projects/:id', { error: error.message, id: req.params.id });
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
-});
+// NOTE: Removed /api/projects/:id route due to path-to-regexp errors in production
+// Frontend will only use /api/projects (get all) for now
 
 // Get projects statistics
 app.get('/api/projects/stats', async (req, res) => {
