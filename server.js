@@ -81,11 +81,23 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve React app for all non-API routes (React Router support)
-app.get('*', (req, res) => {
-  if (process.env.NODE_ENV === 'production') {
+// Serve React app - specific routes to avoid path-to-regexp issues
+if (process.env.NODE_ENV === 'production') {
+  // Serve index.html for React Router routes
+  app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  } else {
+  });
+  
+  app.get('/projects', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+  
+  app.get('/home', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+} else {
+  // Development info page
+  app.get('/', (req, res) => {
     res.send(`
       <h1>🚀 CV Server Running!</h1>
       <p><strong>Backend API:</strong> localhost:${PORT}</p>
@@ -94,8 +106,8 @@ app.get('*', (req, res) => {
       <p>📧 <a href="/api/health">API Health Check</a></p>
       <p>💬 POST /api/contact - Contact Form</p>
     `);
-  }
-});
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`🚀 CV Server running on localhost:${PORT}`);
