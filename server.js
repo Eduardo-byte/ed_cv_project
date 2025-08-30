@@ -36,6 +36,12 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Initialize Supabase client for projects data
+const supabase = createClient(
+  process.env.VITE_SUPABASE_URL,
+  process.env.VITE_SUPABASE_ANON_KEY
+);
+
 app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
@@ -78,18 +84,90 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// In production, proxy /api/projects/* requests to internal API server (port 3002)
-// This allows frontend to call same domain for both contact form and projects data
-if (process.env.NODE_ENV === 'production') {
-  app.use('/api/projects', createProxyMiddleware({
-    //target: 'http://localhost:3002', // Internal API server (same Render instance)
-    target: 'https://ed-cv-project.onrender.com:3001', // Internal API server (same Render instance)
-    changeOrigin: true,
-    pathRewrite: {
-      '^/api/projects': '/api' // Remove /projects from path before forwarding
+// Projects API endpoints - handle directly in main server (no proxy needed)
+app.get('/api/projects', async (req, res) => {
+  try {
+    console.log('🚀 Fetching projects from Supabase...');
+    
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('❌ Supabase error:', error);
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Database query failed',
+        message: error.message 
+      });
     }
-  }));
-}
+
+    console.log(`✅ Found ${data?.length || 0} projects`);
+    
+    res.json({ 
+      success: true, 
+      data: data || [],
+      count: data?.length || 0,
+      metadata: {
+        executionTime: '< 1s',
+        resultsCount: data?.length || 0
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Server error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error',
+      message: error.message 
+    });
+  }
+});
+
+// Projects stats endpoint
+app.get('/api/projects/stats', async (req, res) => {
+  try {
+    console.log('📊 Fetching project stats...');
+    
+    const { data, error } = await supabase
+      .from('projects')
+      .select('status, project_type, is_featured');
+
+    if (error) {
+      console.error('❌ Supabase stats error:', error);
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Database query failed',
+        message: error.message 
+      });
+    }
+
+    const stats = {
+      total: data?.length || 0,
+      completed: data?.filter(p => p.status === 'completed').length || 0,
+      inProgress: data?.filter(p => p.status === 'in_progress').length || 0,
+      featured: data?.filter(p => p.is_featured).length || 0,
+      company: data?.filter(p => p.project_type === 'company').length || 0,
+      personal: data?.filter(p => p.project_type === 'personal').length || 0
+    };
+
+    console.log('📈 Stats calculated:', stats);
+    
+    res.json({ 
+      success: true, 
+      data: stats
+    });
+
+  } catch (error) {
+    console.error('💥 Stats server error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error',
+      message: error.message 
+    });
+  }
+});
 
 app.get('/api/health', (req, res) => {
   res.json({ 
