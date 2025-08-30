@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve React static files in production
-if (process.env.NODE_ENV === 'production') {
+if (process.env.VITE_NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'dist')));
 }
 
@@ -26,8 +26,8 @@ if (process.env.NODE_ENV === 'production') {
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: process.env.VITE_EMAIL_USER,
+    pass: process.env.VITE_EMAIL_PASS
   }
 });
 
@@ -43,7 +43,7 @@ app.post('/api/contact', async (req, res) => {
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env.VITE_EMAIL_USER,
       to: 'edbrito.luis@gmail.com',
       subject: subject || 'New Contact Form Message',
       html: `
@@ -82,7 +82,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Serve React app - specific routes to avoid path-to-regexp issues
-if (process.env.NODE_ENV === 'production') {
+if (process.env.VITE_NODE_ENV === 'production') {
   // Serve index.html for React Router routes
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
@@ -113,7 +113,7 @@ app.listen(PORT, () => {
   console.log(`🚀 CV Server running on localhost:${PORT}`);
   console.log(`📧 Contact API: localhost:${PORT}/api/contact`);
   
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.VITE_NODE_ENV === 'production') {
     console.log(`🌐 Frontend: localhost:${PORT} (serving React build)`);
   } else {
     console.log(`⚛️  Frontend: Run 'npm run dev' for React dev server`);

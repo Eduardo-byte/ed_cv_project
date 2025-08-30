@@ -99,13 +99,24 @@ const ProjectCard = ({
                   Impact & Metrics
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
-                  {project.metrics.map((metric, idx) => (
+                  {Array.isArray(project.metrics) 
+                    ? project.metrics.map((metric, idx) => (
                     <div key={idx} className="text-center p-2 bg-slate-50 dark:bg-slate-800 rounded">
                       <div className="font-bold text-lg text-slate-800 dark:text-white">
                         {metric.value}
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400">
                         {metric.label}
+                      </div>
+                    </div>
+                  ))
+                    : Object.entries(project.metrics || {}).map(([key, value], idx) => (
+                    <div key={idx} className="text-center p-2 bg-slate-50 dark:bg-slate-800 rounded">
+                      <div className="font-bold text-lg text-slate-800 dark:text-white">
+                        {value}
+                      </div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">
+                        {key}
                       </div>
                     </div>
                   ))}

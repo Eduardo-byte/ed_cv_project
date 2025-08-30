@@ -1,11 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL;
-const WEBSCRAPER_URL = import.meta.env.VITE_WEBSCRAPER_URL;
-const SOCIAL_URL = import.meta.env.VITE_SOCIAL_URL;
 const API_GATEWAY_URL = import.meta.env.VITE_API_GATEWAY_URL;
 
-export const API_URL_KEY = import.meta.env.VITE_API_URL_KEY;
-export const WEBSCRAPER_API_KEY = import.meta.env.VITE_WEBSCRAPER_API_KEY;
-export const SOCIAL_API_KEY = import.meta.env.VITE_SOCAIL_API_KEY;
 export const API_GATEWAY_JWT = import.meta.env.VITE_API_GATEWAY_JWT;
 
 
@@ -16,7 +10,7 @@ export const ENDPOINTS = {
         READ_BY_CLIENT_EMAIL: `${API_GATEWAY_URL}/api/v2/client/read-user/:email`,
         READ_ALL_CLIENTS: `${API_GATEWAY_URL}/api/v2/client/read_all/`,
         UPDATE_CLIENT: `${API_GATEWAY_URL}/api/v2/client/update/:clientId`,
-        CREATE_CLIENT_BY_EMAIL_PASSWORD: `${API_GATEWAY_URL}/api/v2/client/create`,
+        CREATE_CLIENT_BY_VITE_EMAIL_PASSWORD: `${API_GATEWAY_URL}/api/v2/client/create`,
         INSERT_CLIENT: `${API_GATEWAY_URL}/api/v2/client/insert`,
     },
     CHATS: {

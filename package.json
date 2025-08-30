@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build", 
     "preview": "vite preview",
     "server": "node server.js",
-    "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
+    "api": "cd api && npm start",
+    "dev:full": "concurrently \"npm run server\" \"npm run dev\" \"npm run api\"",
+    "dev:all": "concurrently \"npm run server\" \"npm run dev\" \"npm run api\"",
     "start": "node server.js"
   },
   "dependencies": {

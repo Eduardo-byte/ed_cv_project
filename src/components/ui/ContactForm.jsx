@@ -66,7 +66,7 @@ const ContactForm = ({ className = '' }) => {
     
     try {
       // Send to Nodemailer backend (use relative URL for production)
-      const apiUrl = process.env.NODE_ENV === 'production' 
+      const apiUrl = process.env.VITE_NODE_ENV === 'production' 
         ? '/api/contact' 
         : 'http://localhost:3001/api/contact';
       
