@@ -81,7 +81,8 @@ app.post('/api/contact', async (req, res) => {
 // This allows frontend to call same domain for both contact form and projects data
 if (process.env.NODE_ENV === 'production') {
   app.use('/api/projects', createProxyMiddleware({
-    target: 'http://localhost:3002', // Internal API server
+    //target: 'http://localhost:3002', // Internal API server
+    target: 'https://ed-cv-project.onrender.com', // Internal API server
     changeOrigin: true,
     pathRewrite: {
       '^/api/projects': '/api' // Remove /projects from path before forwarding

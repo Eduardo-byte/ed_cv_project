@@ -67,7 +67,7 @@ const ContactForm = ({ className = '' }) => {
     try {
       // Send to Nodemailer backend (use relative URL for production)
       const apiUrl = process.env.VITE_NODE_ENV === 'production' 
-        ? '/api/contact' 
+        ? 'https://ed-cv-project.onrender.com/api/contact' 
         : 'http://localhost:3001/api/contact';
       
       const response = await fetch(apiUrl, {
