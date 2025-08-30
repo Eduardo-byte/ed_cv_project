@@ -134,14 +134,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Catch-all handler for undefined routes (must be last)
-app.use('*', (req, res) => {
-  res.status(404).json({ 
-    success: false, 
-    error: 'Route not found',
-    path: req.originalUrl 
-  });
-});
+// Remove catch-all route to avoid path-to-regexp issues in production
 
 // Start the server and display useful information
 app.listen(PORT, () => {
