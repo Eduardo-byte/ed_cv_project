@@ -2,15 +2,16 @@
 // Demonstrates enterprise-level service architecture with logging and error handling
 
 import apiGatewayAxiosInstance, { logError } from '../config/apiGatewayAxiosInstance.js';
+import { ENDPOINTS } from '../config/endpoints.js';
+import { getApiPath, replaceUrlParams } from '../utils/apiUtils.js';
 
 class APIProjectService {
     constructor() {
-        // Set API base URL based on environment:
-        // Production: Use /api (gets proxied to internal server)
-        // Development: Direct connection to localhost:3002
+        // Set API base URL based on environment variables
+        const apiVersion = import.meta.env.VITE_API_VERSION || 'v1';
         this.baseURL = import.meta.env.PROD 
-                ? '/api'  // Relative URL - gets proxied to internal API server
-            : 'http://localhost:3002/api';  // Direct connection in development
+            ? `${import.meta.env.VITE_API_BASE_URL_PROD || '/api'}/${apiVersion}`
+            : `${import.meta.env.VITE_API_BASE_URL_DEV || 'http://localhost:3001'}/${apiVersion}`;
         this.serviceName = 'APIProjectService';
         
         // Configure axios instance for projects API
@@ -115,7 +116,7 @@ class APIProjectService {
      */
     async getAllProjects(filters = {}) {
         const startTime = Date.now();
-        const endpoint = '/projects';
+        const endpoint = getApiPath(ENDPOINTS.PROJECTS.READ_ALL);
         
         try {
             const logData = this.logApiCall('GET', endpoint, filters, startTime);
@@ -140,7 +141,7 @@ class APIProjectService {
      */
     async getProjectById(projectId) {
         const startTime = Date.now();
-        const endpoint = `/projects/${projectId}`;
+        const endpoint = getApiPath(replaceUrlParams(ENDPOINTS.PROJECTS.READ_BY_ID, { id: projectId }));
         
         try {
             const logData = this.logApiCall('GET', endpoint, { projectId }, startTime);
@@ -162,7 +163,7 @@ class APIProjectService {
      */
     async getProjectStats() {
         const startTime = Date.now();
-        const endpoint = '/projects/stats';
+        const endpoint = getApiPath(ENDPOINTS.PROJECTS.STATS);
         
         try {
             const logData = this.logApiCall('GET', endpoint, {}, startTime);

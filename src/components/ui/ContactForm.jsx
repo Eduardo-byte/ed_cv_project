@@ -65,11 +65,12 @@ const ContactForm = ({ className = '' }) => {
     setIsSubmitting(true);
     
     try {
-      // Send to Nodemailer backend (use relative URL for production)
-      const apiUrl = process.env.VITE_NODE_ENV === 'production' 
-        ? 'https://ed-cv-project.onrender.com/api/contact' 
-        : 'http://localhost:3001/api/contact';
-      
+      // Send to API microservice (configuration from environment)
+      const apiVersion = import.meta.env.VITE_API_VERSION || 'v1';
+      const apiUrl = import.meta.env.PROD
+        ? `${import.meta.env.VITE_API_BASE_URL_PROD || '/api'}/${apiVersion}/contact`
+        : `${import.meta.env.VITE_API_BASE_URL_DEV || 'http://localhost:3001'}/${apiVersion}/contact`;
+      console.log("apiUrl", apiUrl);
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -156,7 +157,7 @@ const ContactForm = ({ className = '' }) => {
             <motion.div variants={fieldVariants}>
               <Input
                 label="Email"
-                placeholder="your.email@example.com"
+                placeholder={import.meta.env.VITE_CONTACT_PLACEHOLDER_EMAIL || "your.email@domain.com"}
                 type="email"
                 value={formData.email}
                 onValueChange={handleChange('email')}

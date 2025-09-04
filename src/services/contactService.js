@@ -1,5 +1,6 @@
 import { ENDPOINTS } from '../config/endpoints.js';
 import apiGatewayAxiosInstance, { logError } from '../config/apiGatewayAxiosInstance.js';
+import { getApiPath, replaceUrlParams } from '../utils/apiUtils.js';
 
 /**
  * Contact Service - Handles contact form submissions and messaging.
@@ -19,7 +20,7 @@ class ContactService {
                 return null;
             }
 
-            const response = await apiGatewayAxiosInstance.post(ENDPOINTS.CV.CONTACT.SEND_MESSAGE, {
+            const response = await apiGatewayAxiosInstance.post(getApiPath(ENDPOINTS.CONTACT.SEND_MESSAGE), {
                 ...messageData,
                 timestamp: new Date().toISOString(),
                 userAgent: navigator.userAgent,
@@ -55,12 +56,15 @@ class ContactService {
         }
 
         // Validate message length
-        if (formData.message && formData.message.length < 10) {
-            errors.push('Message must be at least 10 characters long');
+        const minLength = parseInt(import.meta.env.VITE_CONTACT_MIN_MESSAGE_LENGTH) || 10;
+        const maxLength = parseInt(import.meta.env.VITE_CONTACT_MAX_MESSAGE_LENGTH) || 5000;
+        
+        if (formData.message && formData.message.length < minLength) {
+            errors.push(`Message must be at least ${minLength} characters long`);
         }
 
-        if (formData.message && formData.message.length > 1000) {
-            errors.push('Message must be less than 1000 characters');
+        if (formData.message && formData.message.length > maxLength) {
+            errors.push(`Message must be less than ${maxLength} characters`);
         }
 
         // Validate name length
@@ -99,11 +103,14 @@ class ContactService {
         const name = formData.name?.toLowerCase() || '';
         const subject = formData.subject?.toLowerCase() || '';
 
+        const maxLinks = parseInt(import.meta.env.VITE_SPAM_MAX_LINKS) || 3;
+        const maxCapsLength = parseInt(import.meta.env.VITE_SPAM_MAX_CAPS_LENGTH) || 50;
+        
         const suspiciousPatterns = [
             // Too many links
-            (message.match(/https?:\/\//g) || []).length > 3,
+            (message.match(/https?:\/\//g) || []).length > maxLinks,
             // All caps message
-            message === message.toUpperCase() && message.length > 50,
+            message === message.toUpperCase() && message.length > maxCapsLength,
             // Repeated characters
             /(.)\1{4,}/.test(message),
             // Contains spam keywords
@@ -124,7 +131,7 @@ class ContactService {
      */
     async getMessages(params = {}) {
         try {
-            const response = await apiGatewayAxiosInstance.get(ENDPOINTS.CV.CONTACT.READ_MESSAGES, { params });
+            const response = await apiGatewayAxiosInstance.get(getApiPath(ENDPOINTS.CONTACT.READ_MESSAGES), { params });
             return response.data.data;
         } catch (error) {
             logError('Error fetching contact messages:', error);
@@ -140,7 +147,7 @@ class ContactService {
     async getMessageById(messageId) {
         try {
             const response = await apiGatewayAxiosInstance.get(
-                ENDPOINTS.CV.CONTACT.READ_BY_ID.replace(':messageId', messageId)
+                getApiPath(replaceUrlParams(ENDPOINTS.CONTACT.READ_BY_ID, { id: messageId }))
             );
             return response.data.data;
         } catch (error) {
@@ -157,8 +164,9 @@ class ContactService {
      */
     async trackContactInteraction(action, metadata = {}) {
         try {
-            if (ENDPOINTS.CV.ANALYTICS?.TRACK_VIEW) {
-                await apiGatewayAxiosInstance.post(ENDPOINTS.CV.ANALYTICS.TRACK_VIEW, {
+            // Analytics tracking temporarily disabled since it's not part of the microservice yet
+            if (false) {
+                await apiGatewayAxiosInstance.post('/analytics/track', {
                     event: 'contact_form',
                     action,
                     metadata: {

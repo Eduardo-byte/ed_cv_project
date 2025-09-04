@@ -1,206 +1,208 @@
-# Eduardo Brito - Professional CV Website
+# CV Project - React Frontend
 
-A modern, responsive CV website built with React, Vite, Tailwind CSS, and HeroUI. This project follows professional MVC architecture patterns and is designed to showcase full-stack development skills.
+A modern React.js frontend for Eduardo Brito's CV website. This project connects to an external API microservice for projects and contact functionality.
 
-## 🚀 Features
+## 🏗️ Architecture
 
-- **Modern Design**: Beautiful, responsive UI with smooth animations
-- **MVC Architecture**: Professional folder structure with separated concerns
-- **Component Library**: Reusable UI components with HeroUI
-- **API Ready**: Service layer prepared for backend integration
-- **Performance Optimized**: Built with Vite for fast development and production builds
-- **Type Safety**: JSDoc comments for better development experience
+This is the **frontend-only** portion of a microservices architecture:
 
-## 🛠️ Tech Stack
+```
+Frontend (React) ──→ External API Microservice
+    Port 5173              Port 3001
+```
 
-- **Frontend**: React 18, Vite
-- **UI Library**: HeroUI (NextUI successor)
-- **Styling**: Tailwind CSS
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Notifications**: Sonner
-- **HTTP Client**: Axios
-- **Routing**: React Router DOM
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- Your API microservice running on port 3001
+
+### Installation & Development
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The frontend will automatically connect to your API microservice at `http://localhost:3001/api/v1`
+
+## 📋 Available Scripts
+
+- `npm run dev` - Start development server (port 5173)
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+
+## 🔧 Configuration
+
+### API Connection
+The frontend is configured to connect to your external microservice:
+
+- **Development**: `http://localhost:3001/api/v1`
+- **Production**: `/api/v1` (via reverse proxy)
+
+### Environment Variables
+Create a `.env` file based on `.env.example`:
+```bash
+# Copy the example file
+cp .env.example .env
+
+# Edit with your values
+nano .env
+```
+
+**Required Environment Variables:**
+```env
+# API Configuration
+VITE_API_BASE_URL_DEV="http://localhost:3001"    # Your microservice URL
+VITE_API_BASE_URL_PROD="/api"                    # Production proxy path
+VITE_API_VERSION="v1"                            # API version
+
+# Application Settings
+VITE_APP_NAME="Eduardo Brito CV"
+VITE_DEBUG_MODE=true                             # Enable dev logging
+
+# Contact Form Settings  
+VITE_CONTACT_MAX_MESSAGE_LENGTH=5000
+VITE_CONTACT_MIN_MESSAGE_LENGTH=10
+```
+
+## 🎯 Features
+
+### 🔐 Authentication Ready
+- JWT token management with automatic refresh
+- Login/logout functionality
+- Token storage in localStorage/sessionStorage
+
+### 📊 API Integration
+- **Projects**: Fetches from `/api/v1/projects`
+- **Contact**: Posts to `/api/v1/contact` 
+- **Health**: Monitors microservice at `/api/v1/health`
+
+### 🎨 UI Components
+- Modern responsive design with Tailwind CSS
+- HeroUI component library
+- Framer Motion animations
+- PDF generation capabilities
 
 ## 📁 Project Structure
 
 ```
 src/
 ├── components/          # Reusable UI components
-│   ├── layout/         # Layout components (Header, etc.)
-│   ├── ui/            # UI components (Cards, Forms, etc.)
-│   ├── common/        # Common/shared components
-│   └── index.js       # Central exports
-├── services/           # Business logic and API calls
-│   ├── projectService.js
-│   ├── contactService.js
-│   ├── metrics.service.js
-│   └── index.js
+│   ├── layout/         # Layout components
+│   └── ui/            # UI components
 ├── config/            # Configuration files
 │   ├── endpoints.js   # API endpoint definitions
-│   └── apiGatewayAxiosInstance.js # HTTP client setup
+│   └── apiGatewayAxiosInstance.js  # Axios setup with JWT
+├── services/          # API service classes
+│   ├── apiProjectService.js
+│   └── contactService.js
+├── Pages/             # React Router pages
 ├── utils/             # Utility functions
-│   ├── constants.js   # Application constants
-│   └── index.js
-├── Pages/             # Page components
-│   └── home.jsx
-├── hooks/             # Custom React hooks (ready for expansion)
-├── types/             # TypeScript types (ready for TS migration)
-└── assets/            # Static assets
+└── hooks/             # Custom React hooks
 ```
 
-## 🏗️ Architecture Highlights
+## 🔌 API Service Usage
 
-### **Clean Service Layer**
-- Class-based services following consistent patterns
-- Unified error handling with `logError`
-- JSDoc documentation for all methods
-- Simple return patterns (`data | null`)
-
-### **Centralized Configuration**
-- All API endpoints in one organized file
-- Environment variable support
-- Easy to maintain and update
-
-### **Reusable Components**
-- Modular UI components
-- Consistent prop patterns
-- Animation support built-in
-
-## 🚀 Getting Started
-
-1. **Clone and Install**
-   ```bash
-   git clone <your-repo>
-   cd ed_cv_project
-   npm install
-   ```
-
-2. **Environment Setup**
-   ```bash
-   cp .env.example .env
-   # Update with your actual API endpoints and keys
-   ```
-
-3. **Start Development Server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Build for Production**
-   ```bash
-   npm run build
-   ```
-
-## 🎨 Customization
-
-### **Personal Information**
-Update `/src/utils/constants.js`:
+### Projects
 ```javascript
-export const APP_INFO = {
-  NAME: 'Your Name - Full Stack Developer',
-  EMAIL: 'your.email@example.com',
-  LOCATION: 'Your Location'
-};
+import apiProjectService from './services/apiProjectService.js';
 
-export const SOCIAL_LINKS = {
-  GITHUB: 'https://github.com/yourusername',
-  LINKEDIN: 'https://linkedin.com/in/yourprofile',
-  // ... your social profiles
-};
+// Get all projects
+const projects = await apiProjectService.getAllProjects();
+
+// Get featured projects
+const featured = await apiProjectService.getFeaturedProjects();
 ```
 
-### **Skills & Technologies**
-Edit `/src/Pages/home.jsx` skillsData array:
+### Contact Form
 ```javascript
-const skillsData = [
-  {
-    title: 'Frontend',
-    icon: Globe,
-    color: 'primary',
-    skills: ['Your', 'Frontend', 'Skills']
-  },
-  // ... your skill categories
-];
+import { contactService } from './services/contactService.js';
+
+// Send contact message
+const result = await contactService.sendMessage({
+  name: 'John Doe',
+  email: 'john@example.com',
+  subject: 'Hello',
+  message: 'Your message here'
+});
 ```
 
-### **API Integration**
-Services are ready to connect to your backend:
+### Authentication
 ```javascript
-import { projectService } from '../services';
+import { authHelpers } from './config/apiGatewayAxiosInstance.js';
 
-// Get projects from your API
-const projects = await projectService.getAllProjects();
-const featured = await projectService.getFeaturedProjects();
+// Login
+await authHelpers.login({ email, password, remember: true });
+
+// Check auth status
+if (authHelpers.isAuthenticated()) {
+  const user = authHelpers.getCurrentUser();
+}
+
+// Logout
+await authHelpers.logout();
 ```
 
-## 🌟 Key Components
+## 🌐 Production Deployment
 
-### **SkillCard**
-Displays technology skills by category with animations
-```jsx
-<SkillCard
-  title="Frontend"
-  icon={Globe}
-  skills={['React', 'Vue.js', 'TypeScript']}
-  color="primary"
-/>
+### Build
+```bash
+npm run build
 ```
 
-### **ContactForm**
-Professional contact form with validation
-```jsx
-<ContactForm className="max-w-2xl" />
+### Reverse Proxy Setup (Nginx)
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+
+    # Serve React frontend
+    location / {
+        root /path/to/dist;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Proxy API calls to microservice
+    location /api/ {
+        proxy_pass http://localhost:3001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
 ```
 
-### **SocialLinks**
-Flexible social media links component
-```jsx
-<SocialLinks
-  layout="horizontal"
-  variant="bordered"
-  showLabels={true}
-/>
-```
+## 🔧 Development Tips
 
-## 🔧 API Endpoints
+### Testing API Connection
+All API calls include automatic logging in development mode. Check your browser console for detailed request/response logs.
 
-The project includes predefined endpoints for:
-- **Projects**: CRUD operations for portfolio projects
-- **Skills**: Manage skills and technologies
-- **Contact**: Handle contact form submissions
-- **Analytics**: Track user interactions
+### Error Handling
+The frontend includes comprehensive error handling:
+- Automatic token refresh on 401 errors
+- Network error recovery
+- User-friendly error messages
 
-## 📱 Responsive Design
+## 📚 Tech Stack
 
-- Mobile-first approach
-- Tailwind CSS utilities
-- HeroUI responsive components
-- Smooth animations on all devices
-
-## 🚀 Deployment Ready
-
-- Optimized build process
-- Environment variable support
-- Static file optimization
-- SEO-friendly structure
-
-## 📈 Next Steps
-
-1. **Backend Integration**: Connect services to your API
-2. **Projects Page**: Add dedicated projects showcase
-3. **Blog Section**: Implement article/blog functionality
-4. **Dashboard**: Add admin panel for content management
-5. **Analytics**: Implement user tracking and metrics
+- **React 18** - Frontend framework
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **HeroUI** - Component library
+- **Framer Motion** - Animations
+- **Axios** - HTTP client
+- **React Router** - Navigation
 
 ## 🤝 Contributing
 
-This is a personal CV project, but feel free to use it as inspiration for your own portfolio!
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test with your microservice
+5. Submit a pull request
 
 ---
 
-Built with ❤️ by Eduardo Brito
+**Note**: This frontend requires the companion API microservice to be running on port 3001 for full functionality.

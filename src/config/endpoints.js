@@ -1,244 +1,49 @@
-const API_GATEWAY_URL = import.meta.env.VITE_API_GATEWAY_URL;
+// CV API Microservice Configuration
+// All configuration comes from environment variables
 
-export const API_GATEWAY_JWT = import.meta.env.VITE_API_GATEWAY_JWT;
-
+const API_BASE_URL = import.meta.env.PROD 
+    ? `${import.meta.env.VITE_API_BASE_URL_PROD || '/api'}/${import.meta.env.VITE_API_VERSION || 'v1'}`
+    : `${import.meta.env.VITE_API_BASE_URL_DEV || 'http://localhost:3001'}/${import.meta.env.VITE_API_VERSION || 'v1'}`;
 
 export const ENDPOINTS = {
-    CLIENTS: {
-        READ_BY_AUD_ID: `${API_GATEWAY_URL}/api/v2/client/read_aud_id/:audId`,
-        READ_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/client/read/:clientId`,
-        READ_BY_CLIENT_EMAIL: `${API_GATEWAY_URL}/api/v2/client/read-user/:email`,
-        READ_ALL_CLIENTS: `${API_GATEWAY_URL}/api/v2/client/read_all/`,
-        UPDATE_CLIENT: `${API_GATEWAY_URL}/api/v2/client/update/:clientId`,
-        CREATE_CLIENT_BY_VITE_EMAIL_PASSWORD: `${API_GATEWAY_URL}/api/v2/client/create`,
-        INSERT_CLIENT: `${API_GATEWAY_URL}/api/v2/client/insert`,
+    // Authentication endpoints
+    AUTH: {
+        LOGIN: `${API_BASE_URL}/auth/login`,
+        LOGOUT: `${API_BASE_URL}/auth/logout`,
+        REFRESH: `${API_BASE_URL}/auth/refresh`,
+        ME: `${API_BASE_URL}/auth/me`,
+        VERIFY: `${API_BASE_URL}/auth/verify`,
+        CHANGE_PASSWORD: `${API_BASE_URL}/auth/change-password`
     },
-    CHATS: {
-        READ_ALL_CHATS_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/chat/read_all/:clientId`,
-        READ_CHATS_BY_CHAT_ID: `${API_GATEWAY_URL}/api/v2/chat/read/:chatId`,
-        CREATE_AGENT: `${API_GATEWAY_URL}/api/v2/chat/create`,
-        CREATE_AI_CONFIG: `${API_GATEWAY_URL}/api/v2/ai/chatbot/generate-json/:chatId`,
-        DELETE_AGENT: `${API_GATEWAY_URL}/api/v2/chat/delete/:chatId`,
-        UPDATE_AGENT: `${API_GATEWAY_URL}/api/v2/chat/update/:chatId`
+    
+    // Projects endpoints
+    PROJECTS: {
+        READ_ALL: `${API_BASE_URL}/projects`,
+        READ_BY_ID: `${API_BASE_URL}/projects/:id`,
+        READ_FEATURED: `${API_BASE_URL}/projects/featured`,
+        READ_BY_TYPE: `${API_BASE_URL}/projects/type/:type`,
+        SEARCH: `${API_BASE_URL}/projects/search`,
+        STATS: `${API_BASE_URL}/projects/stats`,
+        CREATE: `${API_BASE_URL}/projects`,
+        UPDATE: `${API_BASE_URL}/projects/:id`,
+        DELETE: `${API_BASE_URL}/projects/:id`
     },
-    CHATCONFIG: {
-        READ_BY_CHAT_ID: `${API_GATEWAY_URL}/api/v2/chatConfig/chat/:chatId`,
-        READ_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/chatConfig/client/:clientId`,
-        UPDATE_CHAT_CONFIG: `${API_GATEWAY_URL}/api/v2/chatConfig/:Id`
+    
+    // Contact endpoints
+    CONTACT: {
+        SEND_MESSAGE: `${API_BASE_URL}/contact`,
+        READ_MESSAGES: `${API_BASE_URL}/contact/messages`,
+        READ_BY_ID: `${API_BASE_URL}/contact/messages/:id`,
+        SEARCH_MESSAGES: `${API_BASE_URL}/contact/messages/search`,
+        STATS: `${API_BASE_URL}/contact/messages/stats`,
+        MARK_REPLIED: `${API_BASE_URL}/contact/messages/:id/reply`
     },
-    AGENTCONFIG: {
-        READ_BY_CHAT_ID: `${API_GATEWAY_URL}//api/v2/agentConfig/chat/:chatId`,
-        READ_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/agentConfig/client/:clientId`,
-        UPDATE_AGENT_CONFIG: `${API_GATEWAY_URL}/api/v2/agentConfig/:id`
-    },
-    CONVERSATIONS: {
-        READ_AGENT_STATUS_BY_MESSAGE_ID: `${API_GATEWAY_URL}/api/v2/messages/read/:messageId`,
-        UPDATE_CONVERSATION: `${API_GATEWAY_URL}/api/v2/messages/:messageId`,
-        UPDATE_IS_LIVE_AGENT: `${API_GATEWAY_URL}/api/v2/messages/:messageId`,
-        GET_ALL_MESSAGES_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/messages/client/:clientId`,
-    },
-    STAFF: {
-        CREATE_STAFF: `${API_GATEWAY_URL}/api/v2/staff/insert/`,
-        UPDATE_STAFF: `${API_GATEWAY_URL}/api/v2/staff/update/:staffId`,
-        FETCH_ALL_STAFF: `${API_GATEWAY_URL}/api/v2/staff/read_all/`,
-        FETCH_STAFF_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/staff/read_by_client_id/:clientId`,
-        FETCH_STAFF_BY_EMAIL: `${API_GATEWAY_URL}/api/v2/staff/read_by_email/:email`,
-        FETCH_STAFF_BY_AUD_ID: `${API_GATEWAY_URL}/api/v2/staff/read_auth_id/:audId`,
-        DELETE_STAFF: `${API_GATEWAY_URL}/api/v2/staff/delete/:staffId/:authenticatedId`,
-    },
-    USERS: {
-        READ_ALL_USERS: `${API_GATEWAY_URL}/api/v2/users/client/:clientId`,
-        UPDATE_USER: `${API_GATEWAY_URL}/api/v2/users/:userId`,
-        DELETE_USERS: `${API_GATEWAY_URL}/api/v2/users/delete`,
-    },
-    METRICS: {
-        READ_MESSAGES_METRICS_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/metrics/messages/:clientId`,
-        READ_COMPREHENSIVE_METRICS_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/metrics/comprehensive/:clientId`,
-        READ_CHAT_METRICS_BY_CHAT_ID: `${API_GATEWAY_URL}/api/v2/metrics/chat/:chatId`,
-    },
-    WEBSCRAPER: {
-        AGENT: {
-            GENERATE_QUALIFICATION_QUESTION: `${API_GATEWAY_URL}/api/v2/agent/qualification-questions`,
-            GENERATE_AGENT_INFO: `${API_GATEWAY_URL}/api/v2/agent/agent-info`,
-            GENERATE_ANSWERS: `${API_GATEWAY_URL}/api/v2/agent/answers`,
-            GENERATE_FULL_FLOW: `${API_GATEWAY_URL}/api/v2/agent/combined-workflow`,
-            REGENERATE_QUALIFICATION_QUESTIONS: `${API_GATEWAY_URL}/api/v2/agent/regenerate-questions`,
-            REGENERATE_QA: `${API_GATEWAY_URL}/api/v2/agent/regenerate-qa`
-        },
-        PINECONE: {
-            UPDATE_RECORD_BY_ID: `${API_GATEWAY_URL}/api/v2/pinecone/update`,
-            // DELETE_RECORD_BY_ID: `${WEBSCRAPER_URL}/api/v2/pinecone/delete`,
-            DELETE_RECORD_BY_ID: `${API_GATEWAY_URL}/api/v2/pinecone/delete`,
-            GET_ALL_RECORDS_BY_ID: `${API_GATEWAY_URL}/api/v2/pinecone/list-namespace`,
-            SCRAPE_AND_INSERT_IN_PINECONE: `${API_GATEWAY_URL}/api/v2/pinecone/scrape-and-insert`,
-            INSERT_DOCUMENTS_IN_PINECONE: `${API_GATEWAY_URL}/api/v2/pinecone/insert-documents`,
-            INSERT_QA_DOCUMENT: `${API_GATEWAY_URL}/api/v2/pinecone/insert-qa-document`,
-            INSERT_QA_DOCUMENT_V2: `${API_GATEWAY_URL}/api/v2/pinecone/insert-qa-document-with-complete-flow`,
-            INSERT_PDF_DOCUMENT: `${API_GATEWAY_URL}/api/v2/pinecone/process-pdf-and-insert`,
-            INSERT_PDF_DOCUMENT_V2: `${API_GATEWAY_URL}/api/v2/pinecone/process-documents-and-insert`,
-        },
-        SCRAPER: {
-            PROCESS_SINGLE_URL: `${API_GATEWAY_URL}/api/v2/scraper/process-url`,
-            PROCESS_SINGLE_URL_V2: `${API_GATEWAY_URL}/api/v2/scraper/url-process`,
-            PROCESS_MULTIPLE_URLS: `${API_GATEWAY_URL}/api/v2/scraper/batch-process`,
-            CRAWL_WEBSITE_URL: `${API_GATEWAY_URL}/api/v2/scraper/crawl-url`,
-            DELETE_AND_CRAWL: `${API_GATEWAY_URL}/api/v2/scraper/delete-and-crawl`,
-            GET_CRAWL_JOB_STATUS: `${API_GATEWAY_URL}/api/v2/scraper/crawl-status/:jobId`,
-            START_CRAWL_CRON_JOB: `${API_GATEWAY_URL}/api/v2/scraper/crawl-and-process/:agentId`,
-        },
-        CONTENT_SCRAPER: {
-            CREATE_SCRAPED_CONTENT: `${API_GATEWAY_URL}/api/v2/supabase/scraped-content`,
-            GET_SCRAPED_CONTENT_BY_AGENT_ID: `${API_GATEWAY_URL}/api/v2/supabase/scraped-content/by-agent-id/:agentId`,
-            GET_SCRAPED_CONTENT_BY_SOURCE_URL: `${API_GATEWAY_URL}/api/v2/supabase/scraped-content/by-source-url`,
-            GET_SCRAPED_CONTENT_BY_SCRAPE_ID: `${API_GATEWAY_URL}/api/v2/supabase/scraped-content/:scrapeId`,
-            UPDATE_SCRAPED_CONTENT_BY_ID: `${API_GATEWAY_URL}/api/v2/supabase/scraped-content/:scrapeId`,
-            DELETE_SCRAPED_CONTENT_BY_ID: `${API_GATEWAY_URL}/api/v2/supabase/scraped-content/:scrapeId`,
-        }
-    },
-    SOCIAL: {
-        INTEGRATIONS: {
-            CREATE_INTEGRATION: `${API_GATEWAY_URL}/api/v2/integrations`,
-            GET_INTEGRATIONS_BY_AGENT_ID: `${API_GATEWAY_URL}/api/v2/integrations/chat/:agentId`,
-            GET_INTEGRATIONS_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/integrations/client/:clientId`,
-            GET_INTEGRATION_BY_ID: `${API_GATEWAY_URL}/api/v2/integrations/:id`,
-            GET_INTEGRATION_BY_REF_CODE: `${API_GATEWAY_URL}/api/v2/integrations/refCode/:refCode`,
-            UPDATE_INTEGRATION_BY_ID: `${API_GATEWAY_URL}/api/v2/integrations/:id`,
-            DELETE_INTEGRATION_BY_ID: `${API_GATEWAY_URL}/api/v2/integrations/:id`,
-            DELETE_INTEGRATIONS_BY_AGENT_ID: `${API_GATEWAY_URL}/api/v2/integrations/chat/:agentId`,
-        },
-        META: {
-            AUTH: {
-                GET_APP_ID: `${API_GATEWAY_URL}/api/v2/meta/app-id`,
-                EXCHANGE_TOKEN: `${API_GATEWAY_URL}/api/v2/meta/exchange-token`,
-                SUBSCRIBE_PAGE: `${API_GATEWAY_URL}/api/v2/meta/subscribe-page`,
-                SUBSCRIBE_INSTAGRAM_PAGE: `${API_GATEWAY_URL}/api/v2/meta/subscribe-instagram-page`,
-                UNSUBSCRIBE_PAGE: `${API_GATEWAY_URL}/api/v2/meta/unsubscribe-page`
-            },
-            FACEBOOK: {
-                GET_PROFILE: `${API_GATEWAY_URL}/api/v2/facebook/profile`,
-                GET_FB_PAGES: `${API_GATEWAY_URL}/api/v2/facebook/pages`,
-                GET_FB_BUSINESS: `${API_GATEWAY_URL}/api/v2/facebook/business`,
-                GET_FB_BUSINESS_PAGES: `${API_GATEWAY_URL}/api/v2/facebook/business/pages`,
-                GET_MESSAGES_BY_CONVERSATION_ID: `${API_GATEWAY_URL}/api/v2/facebook/messages`,
-                GET_MESSAGES_SENDER_PROFILE: `${API_GATEWAY_URL}/api/v2/facebook/message-sender`,
-                CREATE_MESSAGE: `${API_GATEWAY_URL}/api/v2/facebook/take-thread-control-and-send-message`,
-                TAKE_THREAD_CONTROL: `${API_GATEWAY_URL}/api/v2/facebook/take-thread-control`,
-                CREATE_ATTACHMENT_MESSAGE: `${API_GATEWAY_URL}/api/v2/facebook/send-attachment`,
-                SEND_MESSAGE: `${API_GATEWAY_URL}/api/v2/facebook/send-message`
-            },
-            WHATSAPP: {
-                GET_APP_ID: `${API_GATEWAY_URL}/api/v2/whatsapp/app-id`,
-                EXCHANGE_TOKEN: `${API_GATEWAY_URL}/api/v2/whatsapp/exchange-token`,
-                GET_WT_BUSINESS: `${API_GATEWAY_URL}/api/v2/whatsapp/business`,
-                GET_WT_TEMPLATES: `${API_GATEWAY_URL}/api/v2/whatsapp/templates`,
-                DELETE_WT_TEMPLATE: `${API_GATEWAY_URL}/api/v2/whatsapp/templates`,
-                CREATE_WT_TEMPLATE: `${API_GATEWAY_URL}/api/v2/whatsapp/templates`,
-                EDIT_WT_TEMPLATE: `${API_GATEWAY_URL}/api/v2/whatsapp/templates/:templateId`,
-                SEND_DIRECT_MESSAGE: `${API_GATEWAY_URL}/api/v2/whatsapp/direct-message`,
-                SUBSCRIBE_WHATSAPP_PAGE: `${API_GATEWAY_URL}/api/v2/whatsapp/subscribe`,
-                VERIFY_PARTNER: `${API_GATEWAY_URL}/api/v2/whatsapp/verify`,
-                UNSUBSCRIBE_WHATSAPP_PAGE: `${API_GATEWAY_URL}/api/v2/whatsapp/unsubscribe`
-            },
-            INSTAGRAM: {
-                GET_ACCOUNTS: `${API_GATEWAY_URL}/api/v2/instagram/accounts`,
-                GET_PROFILE: `${API_GATEWAY_URL}/api/v2/instagram/profile`,
-                GET_IG_MEDIA: `${API_GATEWAY_URL}/api/v2/instagram/media`,
-                GET_MESSAGES_BY_CONVERSATION_ID: `${API_GATEWAY_URL}/api/v2/instagram/messages`,
-                GET_MESSAGES_SENDER_PROFILE: `${API_GATEWAY_URL}/api/v2/instagram/message-sender`,
-                CREATE_MESSAGE: `${API_GATEWAY_URL}/api/v2/instagram/take-thread-control-and-send-message`,
-                TAKE_THREAD_CONTROL: `${API_GATEWAY_URL}/api/v2/instagram/take-thread-control`,
-                CREATE_ATTACHMENT_MESSAGE: `${API_GATEWAY_URL}/api/v2/instagram/send-attachment`,
-                SEND_MESSAGE: `${API_GATEWAY_URL}/api/v2/instagram/send-message`
-
-            },
-            CLIENT_EXTENSIONS: {
-                CREATE_CLIENT_EXTENSION: `${API_GATEWAY_URL}/api/v2/client-extensions`,
-                GET_CLIENT_EXTENSION_BY_ID: `${API_GATEWAY_URL}/api/v2/client-extensions/:id`,
-                GET_CLIENT_EXTENSION_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/client-extensions/client/:clientId`,
-                UPDATE_CLIENT_EXTENSION_BY_ID: `${API_GATEWAY_URL}/api/v2/client-extensions/:id`,
-                DELETE_CLIENT_EXTENSION_BY_ID: `${API_GATEWAY_URL}/api/v2/client-extensions/:id`,
-            }
-        },
-        TELEGRAM: {
-            SEND_MESSAGE: `${API_GATEWAY_URL}/api/v2/telegram/send-telegram-message`
-        }
-    },
-    SUBSCRIPTION: {
-        // Zoho Endpoints
-        PLAN_MANAGEMENT: {
-            GET_PAYMENT_LINKS: `${API_GATEWAY_URL}/api/v2/plan-management/payment-links`,
-            GET_CLIENT_SUBSCRIPTION_BY_ID: `${API_GATEWAY_URL}/api/v2/plan-management/subscription/:subscriptionId`,
-            DOWNGRADE_PLAN: `${API_GATEWAY_URL}/api/v2/plan-management/downgrade`,
-            GET_CURRENT_PLAN_FOR_CLIENT_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/plan-management/customer/:clientId/current-plan`,
-            SEARCH_CLIENT_BY_EMAIL: `${API_GATEWAY_URL}/api/v2/plan-management/customers/search?email=:email`,
-            CANCEL_SUBSCRIPTION_BY_ID: `${API_GATEWAY_URL}/api/v2/plan-management/:subscriptionId/cancel`
-
-        },
-        // Supabase Endpoints
-        SUBSCRIPTION_PLAN: {
-            CREATE_NEW_SUBSCRIPTION: `${API_GATEWAY_URL}/api/v2/subscription_plans`,
-            UPDATE_SUBSCRIPTION_BY_ID: `${API_GATEWAY_URL}/api/v2/subscription_plans/:subscriptionId`,
-            GET_SUBSCRIPTION_BY_ID: `${API_GATEWAY_URL}/api/v2/subscription_plans/:subscriptionId`,
-            GET_SUBSCRIPTION_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/subscription_plans/client/:clientId`,
-        }
-    },
-    WEBHOOK: {
-        READ_ALL_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/webhooks/client/:clientId`,
-        CREATE_WEBHOOK: `${API_GATEWAY_URL}/api/v2/webhooks`,
-        UPDATE_WEBHOOK: `${API_GATEWAY_URL}/api/v2/webhooks/:id`
-    },
-    API_KEYS: {
-        READ_ALL_BY_CLIENT_ID: `${API_GATEWAY_URL}/api/v2/api-keys/client/:clientId`,
-        CREATE_API_KEY: `${API_GATEWAY_URL}/api/v2/api-keys/client/:clientId`,
-        UPDATE_API_KEY: `${API_GATEWAY_URL}/api/v2/api-keys/:keyId`,
-        DELETE_API_KEY: `${API_GATEWAY_URL}/api/v2/api-keys/:keyId`,
-        REGENERATE_API_KEY: `${API_GATEWAY_URL}/api/v2/api-keys/:keyId/regenerate`
-    },
-    AI: {
-        // Old AI Architecture
-        API_V1: {
-            GET_AI_V1_RESPONSE: `${API_GATEWAY_URL}/api/v1/ai/answer`,
-            GET_AI_V2_RESPONSE: `${API_GATEWAY_URL}/api/v1/ai/generate`,
-        },
-        ASSISTANT: {
-            CREATE_AND_UPLOAD: `${API_GATEWAY_URL}/api/v1/pinecone/assistant-with-document`,
-            DELETE_DOCUMENT_BY_ID: `${API_GATEWAY_URL}/api/v1/pinecone/assistant/:agentId/file/:docId`,
-            UPLOAD_DOCUMENT_TEXT: `${API_GATEWAY_URL}/api/v1/pinecone/upload-content`
-        }
-    },
-    CV: {
-        PROJECTS: {
-            READ_ALL: `${API_GATEWAY_URL}/api/v2/cv/projects`,
-            READ_BY_ID: `${API_GATEWAY_URL}/api/v2/cv/projects/:projectId`,
-            READ_FEATURED: `${API_GATEWAY_URL}/api/v2/cv/projects/featured`,
-            READ_BY_CATEGORY: `${API_GATEWAY_URL}/api/v2/cv/projects/category/:category`,
-            CREATE: `${API_GATEWAY_URL}/api/v2/cv/projects`,
-            UPDATE: `${API_GATEWAY_URL}/api/v2/cv/projects/:projectId`,
-            DELETE: `${API_GATEWAY_URL}/api/v2/cv/projects/:projectId`
-        },
-        SKILLS: {
-            READ_ALL: `${API_GATEWAY_URL}/api/v2/cv/skills`,
-            READ_BY_CATEGORY: `${API_GATEWAY_URL}/api/v2/cv/skills/category/:category`,
-            CREATE: `${API_GATEWAY_URL}/api/v2/cv/skills`,
-            UPDATE: `${API_GATEWAY_URL}/api/v2/cv/skills/:skillId`,
-            DELETE: `${API_GATEWAY_URL}/api/v2/cv/skills/:skillId`
-        },
-        EXPERIENCE: {
-            READ_ALL: `${API_GATEWAY_URL}/api/v2/cv/experience`,
-            READ_BY_ID: `${API_GATEWAY_URL}/api/v2/cv/experience/:experienceId`,
-            CREATE: `${API_GATEWAY_URL}/api/v2/cv/experience`,
-            UPDATE: `${API_GATEWAY_URL}/api/v2/cv/experience/:experienceId`,
-            DELETE: `${API_GATEWAY_URL}/api/v2/cv/experience/:experienceId`
-        },
-        CONTACT: {
-            SEND_MESSAGE: `${API_GATEWAY_URL}/api/v2/cv/contact/send`,
-            READ_MESSAGES: `${API_GATEWAY_URL}/api/v2/cv/contact/messages`,
-            READ_BY_ID: `${API_GATEWAY_URL}/api/v2/cv/contact/messages/:messageId`
-        },
-        ANALYTICS: {
-            TRACK_VIEW: `${API_GATEWAY_URL}/api/v2/cv/analytics/track`,
-            READ_STATS: `${API_GATEWAY_URL}/api/v2/cv/analytics/stats`
-        }
+    
+    // Health check endpoints
+    HEALTH: {
+        CHECK: `${API_BASE_URL}/health`,
+        READY: `${API_BASE_URL}/health/ready`,
+        LIVE: `${API_BASE_URL}/health/live`
     }
 };
 
