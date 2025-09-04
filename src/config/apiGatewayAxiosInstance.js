@@ -79,10 +79,14 @@ apiGatewayAxiosInstance.interceptors.request.use(
             config.headers.Authorization = `Bearer ${token}`;
         }
 
-        // Add API key header if configured
+        // Add API key header if configured 
         const apiKey = import.meta.env.VITE_API_KEY;
-        if (apiKey) {
+        console.log('apiKey', apiKey);
+        if (apiKey && apiKey !== 'your-frontend-api-key-here' && apiKey.trim() !== '') {
             config.headers['x-api-key'] = apiKey;
+            console.log('✅ Added x-api-key header:', apiKey);
+        } else {
+            console.log('❌ API key not added:', { apiKey, condition: 'invalid or placeholder' });
         }
 
         // Log request in development
@@ -98,7 +102,7 @@ apiGatewayAxiosInstance.interceptors.request.use(
                 }
             });
         }
-
+        console.log("config.headers", config.headers);
         return config;
     },
     (error) => {
