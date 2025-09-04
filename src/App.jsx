@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HeroUIProvider } from "@heroui/react";
 import { Toaster } from "sonner";
-import Home from "./Pages/home";
-import Projects from "./Pages/Projects";
+import Home from "./pages/home";
+import Projects from "./pages/Projects";
 
 
 function App() {
