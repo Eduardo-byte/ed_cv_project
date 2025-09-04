@@ -9,7 +9,7 @@ import { APP_INFO, ROUTES } from '../utils/constants.js'
 import { downloadGeneratedCV } from '../utils/cvGenerator.js'
 
 export default function Home() {
-    // Skills data organized by category
+    // Skills data organized by category//
     const skillsData = [
         {
             title: 'Frontend',
