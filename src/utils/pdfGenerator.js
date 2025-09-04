@@ -49,131 +49,7 @@ export const generateProfessionalCV = () => {
   doc.setFont('helvetica', 'normal');
   doc.text('Software Developer', rightColumnStart, 35);
   
-  // === LEFT COLUMN ===
-  let leftY = 80;
-  
-  // Details Section
-  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Details', 10, leftY);
-  leftY += 15;
-  
-  // Contact info
-  doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Phone', 10, leftY);
-  leftY += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.text('07495693576', 10, leftY);
-  leftY += 15;
-  
-  doc.setFont('helvetica', 'bold');
-  doc.text('Email', 10, leftY);
-  leftY += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.text('edbrito.luis@gmail.com', 10, leftY);
-  leftY += 15;
-
-  doc.setFont('helvetica', 'bold');
-  doc.text('LinkedIn', 10, leftY);
-  leftY += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.text('linkedin.com/in/eduardo-luis-brito', 10, leftY);
-  doc.setFontSize(9);
-  leftY += 15;
-
-  doc.setFont('helvetica', 'bold');
-  doc.text('GitHub', 10, leftY);
-  leftY += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.text('github.com/Eduardo-byte', 10, leftY);
-  doc.setFontSize(9);
-  leftY += 15;
-
-  doc.setFont('helvetica', 'bold');
-  doc.text('Portfolio', 10, leftY);
-  leftY += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.text('ed-cv-project.onrender.com', 10, leftY);
-  doc.setFontSize(9);
-  leftY += 20;
-  
-  // Skills Section
-  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Skills', 10, leftY);
-  leftY += 15;
-  
-  const skills = [
-    { name: 'Node.js Microservices', level: 5 },
-    { name: 'React JS', level: 5 },
-    { name: 'JavaScript', level: 5 },
-    { name: 'API Gateway', level: 4 },
-    { name: 'TON Blockchain', level: 4 },
-    { name: 'WebSocket', level: 4 },
-    { name: 'JWT Auth', level: 4 },
-    { name: 'Supabase', level: 4 }
-  ];
-  
-  skills.forEach(skill => {
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.text(skill.name, 10, leftY);
-    leftY += 5;
-    
-    // Skill dots
-    for (let i = 0; i < 5; i++) {
-      if (i < skill.level) {
-        doc.setFillColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-      } else {
-        doc.setFillColor(200, 200, 200);
-      }
-      doc.circle(10 + (i * 6), leftY, 1.5, 'F');
-    }
-    leftY += 10;
-  });
-  
-  // Languages
-  leftY += 10;
-  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Languages', 10, leftY);
-  leftY += 15;
-  
-  const languages = [
-    { name: 'English', level: 5 },
-    { name: 'Portuguese', level: 5 },
-    { name: 'Spanish', level: 3 }
-  ];
-  
-  languages.forEach(lang => {
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.text(lang.name, 10, leftY);
-    leftY += 5;
-    
-    // Language dots
-    for (let i = 0; i < 5; i++) {
-      if (i < lang.level) {
-        doc.setFillColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-      } else {
-        doc.setFillColor(200, 200, 200);
-      }
-      doc.circle(10 + (i * 6), leftY, 1.5, 'F');
-    }
-    leftY += 10;
-  });
-  
-  // === RIGHT COLUMN ===
+  // === RIGHT COLUMN FIRST ===
   let rightY = 80;
   
   // Profile Section
@@ -376,14 +252,182 @@ export const generateProfessionalCV = () => {
   // Project 3
   rightY = checkPageBreak(rightY, 25);
   doc.setFont('helvetica', 'bold');
+  doc.text('React Analytics Dashboard - Olivia AI Network', rightColumnStart, rightY);
+  rightY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.text('• Built comprehensive React.js dashboard with real-time data visualization', rightColumnStart, rightY);
+  rightY += 4;
+  doc.text('• Integrated D3.js charts and analytics for 25+ microservices monitoring', rightColumnStart, rightY);
+  rightY += 4;
+  doc.text('• Implemented responsive design with modern React hooks and state management', rightColumnStart, rightY);
+  rightY += 8;
+
+  // Project 4
+  rightY = checkPageBreak(rightY, 25);
+  doc.setFont('helvetica', 'bold');
   doc.text('Platform Infrastructure', rightColumnStart, rightY);
   rightY += 5;
   doc.setFont('helvetica', 'normal');
   doc.text('• Multi-tenant SaaS with role-based access control', rightColumnStart, rightY);
   rightY += 4;
-  doc.text('• Real-time analytics dashboard with D3.js and Recharts', rightColumnStart, rightY);
+  doc.text('• Enterprise-level platform supporting multiple client integrations', rightColumnStart, rightY);
   rightY += 20;
+
+  // === LEFT COLUMN PROCESSING (AFTER RIGHT COLUMN IS COMPLETE) ===
+  // Go back to page 1 and start left column
+  doc.setPage(1);
+  let leftY = 80;
   
+  // Details Section
+  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Details', 10, leftY);
+  leftY += 15;
+  
+  // Contact info
+  doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Phone', 10, leftY);
+  leftY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.text('07495693576', 10, leftY);
+  leftY += 15;
+  
+  doc.setFont('helvetica', 'bold');
+  doc.text('Email', 10, leftY);
+  leftY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.text('edbrito.luis@gmail.com', 10, leftY);
+  leftY += 15;
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('LinkedIn', 10, leftY);
+  leftY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.text('linkedin.com/in/eduardo-luis-brito', 10, leftY);
+  doc.setFontSize(9);
+  leftY += 15;
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('GitHub', 10, leftY);
+  leftY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.text('github.com/Eduardo-byte', 10, leftY);
+  doc.setFontSize(9);
+  leftY += 15;
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Portfolio', 10, leftY);
+  leftY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.text('ed-cv-project.onrender.com', 10, leftY);
+  doc.setFontSize(9);
+  leftY += 20;
+  
+  // Skills Section
+  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Skills', 10, leftY);
+  leftY += 15;
+  
+  const skills = [
+    { name: 'Node.js Microservices', level: 5 },
+    { name: 'React JS', level: 5 },
+    { name: 'JavaScript', level: 5 },
+    { name: 'Python', level: 5 },
+    { name: 'Django', level: 4 },
+    { name: 'API Gateway', level: 4 },
+    { name: 'PostgreSQL', level: 4 },
+    { name: 'TON Blockchain', level: 4 },
+    { name: 'WebSocket', level: 4 },
+    { name: 'JWT Auth', level: 4 },
+    { name: 'Git', level: 4 }
+  ];
+  
+  let currentLeftPage = 1;
+  skills.forEach((skill, index) => {
+    // Check if this skill will fit on current page (need 13px for skill + dots)
+    if (leftY + 13 > pageHeight - 20) {
+      // Move to next page for left column only
+      currentLeftPage++;
+      if (currentLeftPage > doc.getNumberOfPages()) {
+        doc.addPage();
+      }
+      doc.setPage(currentLeftPage);
+      doc.setFillColor(lightGrayColor[0], lightGrayColor[1], lightGrayColor[2]);
+      doc.rect(0, 0, leftColumnWidth, pageHeight, 'F');
+      leftY = 30; // Reset Y position for new page
+    }
+    
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(skill.name, 10, leftY);
+    leftY += 5;
+    
+    // Skill dots
+    for (let i = 0; i < 5; i++) {
+      if (i < skill.level) {
+        doc.setFillColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+      } else {
+        doc.setFillColor(200, 200, 200);
+      }
+      doc.circle(10 + (i * 6), leftY, 1.5, 'F');
+    }
+    leftY += 8;
+  });
+  
+  // Languages section
+  leftY += 8;
+  // Check if Languages section will fit (need ~80px for section + all languages)
+  if (leftY + 80 > pageHeight - 20) {
+    currentLeftPage++;
+    if (currentLeftPage > doc.getNumberOfPages()) {
+      doc.addPage();
+    }
+    doc.setPage(currentLeftPage);
+    doc.setFillColor(lightGrayColor[0], lightGrayColor[1], lightGrayColor[2]);
+    doc.rect(0, 0, leftColumnWidth, pageHeight, 'F');
+    leftY = 30;
+  }
+  
+  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Languages', 10, leftY);
+  leftY += 15;
+  
+  const languages = [
+    { name: 'English', level: 5 },
+    { name: 'Portuguese', level: 5 },
+    { name: 'Spanish', level: 3 }
+  ];
+  
+  languages.forEach(lang => {
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(lang.name, 10, leftY);
+    leftY += 5;
+    
+    // Language dots
+    for (let i = 0; i < 5; i++) {
+      if (i < lang.level) {
+        doc.setFillColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+      } else {
+        doc.setFillColor(200, 200, 200);
+      }
+      doc.circle(10 + (i * 6), leftY, 1.5, 'F');
+    }
+    leftY += 8;
+  });
+
   return doc;
 };
 
