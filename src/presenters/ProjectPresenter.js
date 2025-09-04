@@ -1,10 +1,7 @@
 import { apiProjectService } from '../services/index.js';
 import { Project } from '../models/Project.js';
 
-/**
- * Project Presenter - Manages project data and business logic
- * Acts as a bridge between the View (React components) and the Model/Services
- */
+// Business logic for project data management
 export class ProjectPresenter {
     constructor() {
         this.projects = [];
@@ -20,11 +17,6 @@ export class ProjectPresenter {
         this.sortOrder = 'desc';
     }
 
-    /**
-     * Load all projects from the API
-     * @param {Object} params - Query parameters
-     * @returns {Promise<Project[]>}
-     */
     async loadProjects(params = {}) {
         try {
             this.loading = true;
@@ -47,11 +39,6 @@ export class ProjectPresenter {
         }
     }
 
-    /**
-     * Load a specific project by ID
-     * @param {string} projectId 
-     * @returns {Promise<Project|null>}
-     */
     async loadProjectById(projectId) {
         try {
             this.loading = true;
@@ -73,28 +60,16 @@ export class ProjectPresenter {
         }
     }
 
-    /**
-     * Get featured projects
-     * @returns {Project[]}
-     */
     getFeaturedProjects() {
         return this.projects.filter(project => project.featured);
     }
 
-    /**
-     * Get projects by category
-     * @param {string} category 
-     * @returns {Project[]}
-     */
     getProjectsByCategory(category) {
         if (category === 'all') return this.projects;
         return this.projects.filter(project => project.category === category);
     }
 
-    /**
-     * Filter projects based on current filters
-     * @returns {Project[]}
-     */
+    // Apply all active filters
     getFilteredProjects() {
         let filtered = [...this.projects];
 

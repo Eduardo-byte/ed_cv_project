@@ -2,15 +2,8 @@ import { ENDPOINTS } from '../config/endpoints.js';
 import apiGatewayAxiosInstance, { logError } from '../config/apiGatewayAxiosInstance.js';
 import { getApiPath, replaceUrlParams } from '../utils/apiUtils.js';
 
-/**
- * Contact Service - Handles contact form submissions and messaging.
- */
+// Contact form service
 class ContactService {
-    /**
-     * Send contact message.
-     * @param {Object} messageData - The contact message data.
-     * @returns {Promise<Object|null>} - The response data or null if an error occurs.
-     */
     async sendMessage(messageData) {
         try {
             // Validate required fields
@@ -33,11 +26,7 @@ class ContactService {
         }
     }
 
-    /**
-     * Validate contact form data.
-     * @param {Object} formData - The form data to validate.
-     * @returns {Object} - Validation result with isValid boolean and errors array.
-     */
+    // Validate form fields
     validateContactForm(formData) {
         const errors = [];
         const requiredFields = ['name', 'email', 'message'];

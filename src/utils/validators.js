@@ -1,22 +1,10 @@
-/**
- * Common validation utilities
- */
+// Form validation utilities
 
-/**
- * Validate email format
- * @param {string} email 
- * @returns {boolean}
- */
 export const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 };
 
-/**
- * Validate URL format
- * @param {string} url 
- * @returns {boolean}
- */
 export const isValidUrl = (url) => {
     try {
         new URL(url);
@@ -26,33 +14,16 @@ export const isValidUrl = (url) => {
     }
 };
 
-/**
- * Validate phone number format
- * @param {string} phone 
- * @returns {boolean}
- */
 export const isValidPhone = (phone) => {
     const phoneRegex = /^[\+]?[(]?[\d\s\-\(\)]{8,}$/;
     return phoneRegex.test(phone.replace(/\s/g, ''));
 };
 
-/**
- * Validate string length
- * @param {string} text 
- * @param {number} min 
- * @param {number} max 
- * @returns {boolean}
- */
 export const isValidLength = (text, min = 0, max = Infinity) => {
     const length = text ? text.trim().length : 0;
     return length >= min && length <= max;
 };
 
-/**
- * Sanitize HTML content
- * @param {string} html 
- * @returns {string}
- */
 export const sanitizeHtml = (html) => {
     const div = document.createElement('div');
     div.textContent = html;

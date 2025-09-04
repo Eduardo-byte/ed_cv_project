@@ -1,6 +1,4 @@
-/**
- * Project Model - Data structure and validation for projects
- */
+// Project model with validation
 export class Project {
     constructor(data = {}) {
         this.id = data.id || null;
@@ -20,10 +18,7 @@ export class Project {
         this.metadata = data.metadata || {};
     }
 
-    /**
-     * Validate project data
-     * @returns {Object} - Validation result with isValid and errors
-     */
+    // Validate required fields and formats
     validate() {
         const errors = [];
 
@@ -53,11 +48,6 @@ export class Project {
         };
     }
 
-    /**
-     * Check if URL is valid
-     * @param {string} url 
-     * @returns {boolean}
-     */
     isValidUrl(url) {
         try {
             new URL(url);
@@ -67,11 +57,6 @@ export class Project {
         }
     }
 
-    /**
-     * Get formatted date
-     * @param {string} field - createdAt or updatedAt
-     * @returns {string}
-     */
     getFormattedDate(field = 'createdAt') {
         const date = new Date(this[field]);
         return date.toLocaleDateString('en-US', {
@@ -81,26 +66,14 @@ export class Project {
         });
     }
 
-    /**
-     * Get project URL based on priority
-     * @returns {string}
-     */
     getPrimaryUrl() {
         return this.liveUrl || this.githubUrl || '';
     }
 
-    /**
-     * Check if project has required data for display
-     * @returns {boolean}
-     */
     isDisplayReady() {
         return !!(this.title && this.description && this.category);
     }
 
-    /**
-     * Convert to plain object
-     * @returns {Object}
-     */
     toJSON() {
         return {
             id: this.id,
@@ -121,20 +94,10 @@ export class Project {
         };
     }
 
-    /**
-     * Create Project instance from API response
-     * @param {Object} apiData 
-     * @returns {Project}
-     */
     static fromApiResponse(apiData) {
         return new Project(apiData);
     }
 
-    /**
-     * Create multiple Project instances from API response array
-     * @param {Array} apiDataArray 
-     * @returns {Project[]}
-     */
     static fromApiResponseArray(apiDataArray) {
         return Array.isArray(apiDataArray) 
             ? apiDataArray.map(data => Project.fromApiResponse(data))

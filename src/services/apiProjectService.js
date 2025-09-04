@@ -1,5 +1,4 @@
-// API Project Service - Handles all project-related API calls
-// Demonstrates enterprise-level service architecture with logging and error handling
+// API service for project data
 
 import apiGatewayAxiosInstance, { logError } from '../config/apiGatewayAxiosInstance.js';
 import { ENDPOINTS } from '../config/endpoints.js';

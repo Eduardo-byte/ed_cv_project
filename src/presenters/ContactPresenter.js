@@ -1,10 +1,7 @@
 import { contactService } from '../services/index.js';
 import { Contact } from '../models/Contact.js';
 
-/**
- * Contact Presenter - Manages contact form data and business logic
- * Acts as a bridge between the View (React components) and the Model/Services
- */
+// Business logic for contact form handling
 export class ContactPresenter {
     constructor() {
         this.loading = false;
@@ -13,11 +10,7 @@ export class ContactPresenter {
         this.lastSubmission = null;
     }
 
-    /**
-     * Submit contact form
-     * @param {Object} formData - Contact form data
-     * @returns {Promise<boolean>} - Success status
-     */
+    // Submit form with validation and spam check
     async submitContactForm(formData) {
         try {
             this.loading = true;
@@ -60,29 +53,16 @@ export class ContactPresenter {
         }
     }
 
-    /**
-     * Validate form data without submitting
-     * @param {Object} formData 
-     * @returns {Object} - Validation result
-     */
     validateForm(formData) {
         const contact = Contact.fromFormData(formData);
         return contact.validate();
     }
 
-    /**
-     * Check if form data might be spam
-     * @param {Object} formData 
-     * @returns {boolean}
-     */
     isSpamLikely(formData) {
         const contact = Contact.fromFormData(formData);
         return contact.detectSpam();
     }
 
-    /**
-     * Reset form state
-     */
     resetState() {
         this.loading = false;
         this.error = null;

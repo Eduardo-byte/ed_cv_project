@@ -1,6 +1,4 @@
-/**
- * Contact Model - Data structure and validation for contact messages
- */
+// Contact model with validation and spam detection
 export class Contact {
     constructor(data = {}) {
         this.id = data.id || null;
@@ -21,10 +19,7 @@ export class Contact {
         this.metadata = data.metadata || {};
     }
 
-    /**
-     * Validate contact form data
-     * @returns {Object} - Validation result with isValid and errors
-     */
+    // Validate form fields
     validate() {
         const errors = [];
 
@@ -70,31 +65,18 @@ export class Contact {
         };
     }
 
-    /**
-     * Validate email format
-     * @param {string} email 
-     * @returns {boolean}
-     */
     isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
 
-    /**
-     * Validate phone format (optional field)
-     * @param {string} phone 
-     * @returns {boolean}
-     */
     isValidPhone(phone) {
         // Basic phone validation - allows various formats
         const phoneRegex = /^[\+]?[(]?[\d\s\-\(\)]{8,}$/;
         return phoneRegex.test(phone.replace(/\s/g, ''));
     }
 
-    /**
-     * Detect if message might be spam
-     * @returns {boolean}
-     */
+    // Basic spam detection
     detectSpam() {
         const spamKeywords = [
             'buy now', 'click here', 'limited time', 'act fast', 'guaranteed',
