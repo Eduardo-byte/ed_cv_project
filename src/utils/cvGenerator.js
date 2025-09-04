@@ -13,7 +13,8 @@ export const generateCVContent = () => {
       phone: APP_INFO.PHONE,
       location: APP_INFO.LOCATION,
       github: SOCIAL_LINKS.GITHUB,
-      linkedin: SOCIAL_LINKS.LINKEDIN
+      linkedin: SOCIAL_LINKS.LINKEDIN,
+      portfolio: SOCIAL_LINKS.PORTFOLIO
     },
     
     summary: `Passionate full stack developer with expertise in modern web technologies. 

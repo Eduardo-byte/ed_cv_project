@@ -19,7 +19,7 @@ export const SOCIAL_LINKS = {
   LINKEDIN: 'https://www.linkedin.com/in/eduardo-luis-brito-4782a7103/',
   TWITTER: 'https://x.com/Eduardo47153641',
   EMAIL: `mailto:${APP_INFO.EMAIL}`,
-  PORTFOLIO: 'https://yourportfolio.com',
+  PORTFOLIO: 'https://ed-cv-project.onrender.com/',
 };
 
 // Navigation Routes

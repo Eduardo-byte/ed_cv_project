@@ -83,6 +83,24 @@ export const generateProfessionalCV = () => {
   doc.setFontSize(8);
   doc.text('linkedin.com/in/eduardo-luis-brito', 10, leftY);
   doc.setFontSize(9);
+  leftY += 15;
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('GitHub', 10, leftY);
+  leftY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.text('github.com/Eduardo-byte', 10, leftY);
+  doc.setFontSize(9);
+  leftY += 15;
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Portfolio', 10, leftY);
+  leftY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.text('ed-cv-project.onrender.com', 10, leftY);
+  doc.setFontSize(9);
   leftY += 20;
   
   // Skills Section
